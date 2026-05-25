@@ -2,14 +2,14 @@ const { baseUrl } = require('../../utils/config.js')
 
 Page({
   data: {
-    visitRecords: [],
+    visitRecords: [],   // 聚合后的足迹（按展品）
     recommends: [],
     loading: false,
     defaultImg: `${baseUrl}/images/default.jpg`,
     report: {
-      totalCount: 0,
-      totalDuration: 0,
-      favoriteCategory: ''
+      totalCount: 0,        // 去重后的展品数
+      totalDuration: 0,     // 累计停留秒数
+      favoriteCategory: ''  // 偏好分类
     }
   },
 
@@ -20,7 +20,6 @@ Page({
   loadFootprint() {
     const userId = wx.getStorageSync('userId')
     const token = wx.getStorageSync('token')
-
     if (!userId || !token) {
       wx.showToast({ title: '请先登录', icon: 'none' })
       return
@@ -30,10 +29,7 @@ Page({
     wx.request({
       url: `${baseUrl}/api/visit/footprint/${userId}`,
       method: 'GET',
-      header: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
+      header: { 'Authorization': 'Bearer ' + token },
       success: (res) => {
         if (res.data.code === 200) {
           let records = res.data.data || []
@@ -41,8 +37,8 @@ Page({
             if (item.imageUrl && item.imageUrl.startsWith('/')) {
               item.imageUrl = baseUrl + item.imageUrl
             }
-            if (item.visitTime) {
-              item.visitTime = this.formatTime(item.visitTime)
+            if (item.lastVisitTime) {
+              item.lastVisitTimeText = this.formatTime(item.lastVisitTime)
             }
           })
           this.setData({ visitRecords: records })
@@ -57,7 +53,6 @@ Page({
     })
   },
 
-  // 加载基于参观历史的推荐
   loadRecommends(userId, token) {
     wx.request({
       url: `${baseUrl}/api/recommend/${userId}`,
@@ -77,29 +72,23 @@ Page({
     })
   },
 
+  // 报告基于聚合后的数据：展品数、累计时长、按访问次数找偏好分类
   generateReport(records) {
-    let totalCount = records.length
     let totalDuration = 0
-    let categoryCount = {}
-
+    const categoryWeight = {}
     records.forEach(item => {
-      totalDuration += item.duration || 0
+      totalDuration += item.totalDuration || 0
       const category = item.category || '其他'
-      categoryCount[category] = (categoryCount[category] || 0) + 1
+      categoryWeight[category] = (categoryWeight[category] || 0) + (item.visitCount || 1)
     })
-
     let favoriteCategory = ''
-    let maxCount = 0
-    for (let category in categoryCount) {
-      if (categoryCount[category] > maxCount) {
-        maxCount = categoryCount[category]
-        favoriteCategory = category
-      }
+    let max = 0
+    for (const c in categoryWeight) {
+      if (categoryWeight[c] > max) { max = categoryWeight[c]; favoriteCategory = c }
     }
-
     this.setData({
       report: {
-        totalCount,
+        totalCount: records.length,
         totalDuration,
         favoriteCategory: favoriteCategory || '暂无'
       }
@@ -115,24 +104,69 @@ Page({
 
   goToExhibit(e) {
     const id = e.currentTarget.dataset.id
-    if (id) {
-      wx.navigateTo({ url: `/pages/exhibit/exhibit?id=${id}` })
-    } else {
-      wx.showToast({ title: '展品ID无效', icon: 'none' })
-    }
+    if (id) wx.navigateTo({ url: `/pages/exhibit/exhibit?id=${id}` })
   },
 
-  clearFootprint() {
+  // 删除单个展品的所有参观记录
+  removeOne(e) {
+    const exhibitId = e.currentTarget.dataset.id
+    const name = e.currentTarget.dataset.name || '该展品'
+    const token = wx.getStorageSync('token')
+    if (!token) return
+
     wx.showModal({
-      title: '提示',
-      content: '确定要清空所有参观记录吗？此操作不可恢复。',
+      title: '删除',
+      content: `确定删除"${name}"的全部参观记录？`,
       success: (res) => {
-        if (res.confirm) {
-          wx.showToast({ title: '功能开发中', icon: 'none' })
-        }
+        if (!res.confirm) return
+        wx.request({
+          url: `${baseUrl}/api/visit/mine/exhibit/${exhibitId}`,
+          method: 'DELETE',
+          header: { 'Authorization': 'Bearer ' + token },
+          success: (r) => {
+            if (r.data.code === 200) {
+              wx.showToast({ title: '已删除', icon: 'success' })
+              this.loadFootprint()
+            } else {
+              wx.showToast({ title: r.data.message || '删除失败', icon: 'none' })
+            }
+          },
+          fail: () => wx.showToast({ title: '网络错误', icon: 'none' })
+        })
       }
     })
   },
+
+  // 清空全部参观记录
+  clearFootprint() {
+    const token = wx.getStorageSync('token')
+    if (!token) return
+    if (this.data.visitRecords.length === 0) {
+      wx.showToast({ title: '没有可清空的记录', icon: 'none' })
+      return
+    }
+    wx.showModal({
+      title: '清空足迹',
+      content: '确定清空所有参观记录？此操作不可恢复。',
+      success: (res) => {
+        if (!res.confirm) return
+        wx.request({
+          url: `${baseUrl}/api/visit/mine`,
+          method: 'DELETE',
+          header: { 'Authorization': 'Bearer ' + token },
+          success: (r) => {
+            if (r.data.code === 200) {
+              wx.showToast({ title: `已清空 ${r.data.data} 条`, icon: 'success' })
+              this.loadFootprint()
+            }
+          }
+        })
+      }
+    })
+  },
+
+  // 阻止点击删除按钮时冒泡到 item 跳转
+  noop() {},
 
   onPullDownRefresh() {
     this.loadFootprint()

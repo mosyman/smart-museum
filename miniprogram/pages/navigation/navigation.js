@@ -72,6 +72,10 @@ Page({
               finished: false
             })
             wx.setNavigationBarTitle({ title: route.name })
+            // 报告首站参观（之前漏了，nextStep 只报告 idx+1）
+            if (ordered.length > 0) {
+              this.reportVisit(ordered[0].id)
+            }
           }
         })
       },

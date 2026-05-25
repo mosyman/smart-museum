@@ -34,9 +34,22 @@ public class VisitRecordServiceImpl extends ServiceImpl<VisitRecordMapper, Visit
     public List<Integer> getVisitedExhibitIds(Integer userId) {
         QueryWrapper<VisitRecord> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId).select("exhibit_id");
-        List<VisitRecord> records = list(wrapper);
-        return records.stream()
+        return list(wrapper).stream()
                 .map(VisitRecord::getExhibitId)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public int clearByUser(Integer userId) {
+        QueryWrapper<VisitRecord> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        return baseMapper.delete(wrapper);
+    }
+
+    @Override
+    public int removeByUserAndExhibit(Integer userId, Integer exhibitId) {
+        QueryWrapper<VisitRecord> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId).eq("exhibit_id", exhibitId);
+        return baseMapper.delete(wrapper);
     }
 }

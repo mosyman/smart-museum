@@ -108,12 +108,45 @@
   flex: 1;
 }
 
+.footprint-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
 .footprint-name {
-  display: block;
   font-size: 28rpx;
   font-weight: bold;
   color: #333;
-  margin-bottom: 8rpx;
+}
+
+.visit-badge {
+  font-size: 20rpx;
+  color: #fff;
+  background-color: #e6a23c;
+  padding: 2rpx 10rpx;
+  border-radius: 16rpx;
+}
+
+.footprint-meta {
+  display: block;
+  font-size: 22rpx;
+  color: #666;
+  margin-bottom: 4rpx;
+}
+
+.footprint-action {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10rpx;
+}
+.action-del {
+  font-size: 32rpx;
+  opacity: 0.5;
 }
 
 .footprint-time {

@@ -1,11 +1,10 @@
 <view class="container">
-  <!-- 加载中 -->
   <view class="loading-state" wx:if="{{loading}}">
     <text>加载中...</text>
   </view>
 
   <block wx:else>
-    <!-- 参观报告卡片 -->
+    <!-- 参观报告 -->
     <view class="report-card" wx:if="{{visitRecords.length > 0}}">
       <view class="report-title">📊 参观报告</view>
       <view class="report-stats">
@@ -30,22 +29,30 @@
         <text class="header-title">📝 参观记录</text>
         <text class="header-clear" bindtap="clearFootprint">清空</text>
       </view>
-      
-      <!-- 关键：data-id="{{item.exhibitId}}" -->
-      <view class="footprint-item" wx:for="{{visitRecords}}" wx:key="recordId" bindtap="goToExhibit" data-id="{{item.exhibitId}}">
+
+      <view
+        class="footprint-item"
+        wx:for="{{visitRecords}}"
+        wx:key="exhibitId"
+        bindtap="goToExhibit"
+        data-id="{{item.exhibitId}}"
+      >
         <image class="footprint-image" src="{{item.imageUrl || defaultImg}}" mode="aspectFill" />
         <view class="footprint-info">
-          <text class="footprint-name">{{item.exhibitName}}</text>
-          <text class="footprint-time">📅 {{item.visitTime}}</text>
-          <text class="footprint-duration">⏱️ 停留 {{item.duration}} 秒</text>
+          <view class="footprint-name-row">
+            <text class="footprint-name">{{item.exhibitName}}</text>
+            <text class="visit-badge" wx:if="{{item.visitCount > 1}}">×{{item.visitCount}}</text>
+          </view>
+          <text class="footprint-meta">🏷️ {{item.category || '其他'}}</text>
+          <text class="footprint-time">📅 最近：{{item.lastVisitTimeText}}</text>
+          <text class="footprint-duration">⏱️ 累计停留 {{item.totalDuration}} 秒</text>
         </view>
-        <view class="footprint-arrow">
-          <text>›</text>
+        <view class="footprint-action" catchtap="removeOne" data-id="{{item.exhibitId}}" data-name="{{item.exhibitName}}">
+          <text class="action-del">🗑️</text>
         </view>
       </view>
     </view>
 
-    <!-- 空状态 -->
     <view class="empty-state" wx:else>
       <text class="empty-emoji">👣</text>
       <text class="empty-text">暂无参观记录</text>

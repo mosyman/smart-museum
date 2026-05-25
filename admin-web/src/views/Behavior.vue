@@ -18,8 +18,10 @@
           <el-table :data="footprint" v-loading="loadingFp" stripe>
             <el-table-column prop="exhibitId" label="展品ID" width="100" />
             <el-table-column prop="exhibitName" label="展品名称" min-width="180" />
-            <el-table-column prop="visitTime" label="参观时间" width="200" />
-            <el-table-column prop="duration" label="停留(秒)" width="120" />
+            <el-table-column prop="category" label="分类" width="100" />
+            <el-table-column prop="visitCount" label="参观次数" width="100" />
+            <el-table-column prop="lastVisitTime" label="最近参观" width="200" />
+            <el-table-column prop="totalDuration" label="累计停留(秒)" width="140" />
           </el-table>
           <el-empty v-if="!loadingFp && footprint.length === 0" description="该用户暂无参观记录" />
         </el-tab-pane>
