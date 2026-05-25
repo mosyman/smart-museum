@@ -25,3 +25,11 @@
     </button>
   </view>
 </view>
+
+<!-- 友好的 404 提示 -->
+<view class="not-found" wx:if="{{notFound}}">
+  <text class="nf-emoji">🔍</text>
+  <text class="nf-title">展品不存在</text>
+  <text class="nf-desc">扫到的二维码可能不是本馆的，或该展品已下架。</text>
+  <button class="nf-btn" bindtap="goBack">返回</button>
+</view>

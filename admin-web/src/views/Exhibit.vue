@@ -125,10 +125,15 @@
     </el-dialog>
 
     <!-- 二维码弹窗 -->
-    <el-dialog v-model="qrVisible" :title="`展品二维码 - ${qrName}`" width="360px" align-center>
+    <el-dialog v-model="qrVisible" :title="`展品二维码 - ${qrName}`" width="380px" align-center>
       <div style="text-align:center;">
         <img v-if="qrUrl" :src="qrUrl" :alt="qrName" style="width:300px;height:300px;" />
-        <p style="margin-top:12px;color:#666;font-size:13px;">小程序扫码即可跳转到该展品详情</p>
+        <p style="margin-top:12px;color:#666;font-size:13px;">
+          内容：<code style="background:#f5f5f5;padding:2px 6px;border-radius:4px;">{{ qrUrl ? `(URL 形式，扫码后小程序解析跳转)` : '' }}</code>
+        </p>
+        <p style="color:#999;font-size:12px;margin:4px 0 16px;">下载后可打印张贴在展品旁</p>
+        <el-button type="primary" @click="downloadQr">下载 PNG</el-button>
+        <el-button @click="printQr">打印</el-button>
       </div>
     </el-dialog>
   </div>
@@ -294,9 +299,50 @@ const qrUrl = ref('')
 const qrName = ref('')
 const handleShowQr = (row) => {
   qrName.value = row.name
-  // 加时间戳避免缓存
   qrUrl.value = `/api/exhibit/${row.id}/qr-code?t=${Date.now()}`
   qrVisible.value = true
+}
+
+// 下载 PNG
+const downloadQr = async () => {
+  try {
+    const res = await fetch(qrUrl.value)
+    const blob = await res.blob()
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `${qrName.value}_qrcode.png`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(a.href)
+  } catch (e) {
+    ElMessage.error('下载失败')
+  }
+}
+
+// 打印
+const printQr = () => {
+  const w = window.open('', '_blank', 'width=400,height=500')
+  if (!w) {
+    ElMessage.warning('请允许弹出窗口以打印')
+    return
+  }
+  w.document.write(`
+    <html><head><title>${qrName.value}</title>
+      <style>
+        body { display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif; }
+        h2 { font-size:18px;margin:8px 0; }
+        img { width:300px;height:300px; }
+        p { color:#666;font-size:12px;margin:4px 0; }
+      </style>
+    </head><body>
+      <h2>${qrName.value}</h2>
+      <img src="${qrUrl.value}" />
+      <p>智慧博物馆 · 扫码听讲解</p>
+    </body></html>
+  `)
+  w.document.close()
+  w.onload = () => { w.print(); }
 }
 
 // 删除

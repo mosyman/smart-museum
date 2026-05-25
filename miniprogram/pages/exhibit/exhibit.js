@@ -16,7 +16,7 @@ Page({
     }
   },
 
-  // 加载展品详情
+  // 加载展品详情（404 友好提示）
   loadExhibit(id) {
     const that = this
     wx.showLoading({ title: '加载中...' })
@@ -25,24 +25,33 @@ Page({
       method: 'GET',
       success(res) {
         wx.hideLoading()
-        if (res.data.code === 200) {
-          let exhibit = res.data.data
-          if (exhibit.imageUrl && exhibit.imageUrl.startsWith('/')) {
-            exhibit.imageUrl = baseUrl + exhibit.imageUrl
-          } else if (!exhibit.imageUrl) {
-            exhibit.imageUrl = baseUrl + '/images/default.jpg'
-          }
-          that.setData({ exhibit: exhibit })
-          wx.setNavigationBarTitle({ title: exhibit.name })
-        } else {
-          wx.showToast({ title: '加载失败', icon: 'none' })
+        // 后端找不到展品时 code=200 data=null
+        if (res.data.code !== 200 || !res.data.data) {
+          that.setData({ exhibit: null, notFound: true })
+          wx.setNavigationBarTitle({ title: '展品不存在' })
+          return
         }
+        let exhibit = res.data.data
+        if (exhibit.imageUrl && exhibit.imageUrl.startsWith('/')) {
+          exhibit.imageUrl = baseUrl + exhibit.imageUrl
+        } else if (!exhibit.imageUrl) {
+          exhibit.imageUrl = baseUrl + '/images/default.jpg'
+        }
+        if (exhibit.audioUrl && exhibit.audioUrl.startsWith('/')) {
+          exhibit.audioUrl = baseUrl + exhibit.audioUrl
+        }
+        that.setData({ exhibit, notFound: false })
+        wx.setNavigationBarTitle({ title: exhibit.name })
       },
       fail() {
         wx.hideLoading()
         wx.showToast({ title: '网络错误', icon: 'none' })
       }
     })
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1, fail: () => wx.switchTab({ url: '/pages/index/index' }) })
   },
 
   // 记录参观（仅登录用户）

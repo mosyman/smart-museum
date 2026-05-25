@@ -1,5 +1,23 @@
 const { baseUrl } = require('../../utils/config.js')
 
+/**
+ * 从扫码结果提取展品 ID。
+ * 支持两种格式：
+ *   1. URL 形式: https://museum.local/e/5 → 5
+ *   2. 纯数字（向后兼容旧码）: "5" → 5
+ * 其它内容（普通网址、文本等）一律返回 null。
+ */
+function parseExhibitId(raw) {
+  if (!raw) return null
+  const s = String(raw).trim()
+  // 匹配 /e/数字 结尾（兼容大小写、可选末尾斜杠/查询串）
+  const m = s.match(/\/e\/(\d+)\/?(?:\?|#|$)/i)
+  if (m) return Number(m[1])
+  // 兼容纯数字
+  if (/^\d+$/.test(s)) return Number(s)
+  return null
+}
+
 Page({
   data: {
     banners: [
@@ -163,15 +181,24 @@ Page({
 
   scanQRCode() {
     wx.scanCode({
+      scanType: ['qrCode'],  // 只接受二维码，排除条形码
       success: (res) => {
-        const exhibitId = parseInt(res.result)
-        if (exhibitId) {
-          wx.navigateTo({ url: `/pages/exhibit/exhibit?id=${exhibitId}` })
-        } else {
-          wx.showToast({ title: '无效的二维码', icon: 'none' })
+        const id = parseExhibitId(res.result)
+        if (!id) {
+          wx.showModal({
+            title: '无法识别',
+            content: `扫码内容："${(res.result || '').slice(0, 60)}"\n不是本馆展品二维码。`,
+            showCancel: false
+          })
+          return
         }
+        wx.showLoading({ title: '加载展品...' })
+        wx.navigateTo({
+          url: `/pages/exhibit/exhibit?id=${id}`,
+          complete: () => wx.hideLoading()
+        })
       },
-      fail: () => wx.showToast({ title: '扫码失败', icon: 'none' })
+      fail: () => wx.showToast({ title: '扫码取消', icon: 'none' })
     })
   },
 

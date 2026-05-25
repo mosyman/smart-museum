@@ -93,24 +93,25 @@ INSERT INTO `user` (`username`, `password`, `role`, `nickname`) VALUES
   ('tourist', '$2y$10$jYI52L3zEkCAu04v06IcbuhSl7Z4cG/pAaYmandplvOCpjG1J8/H2', 'tourist', '游客测试账号')
 ON DUPLICATE KEY UPDATE username = VALUES(username);
 
--- 种子展品（图片来自 static/images/，由 Spring Boot 静态资源映射服务）
+-- 种子展品（图片来自 static/images/，audio 来自 static/audio/，由 Spring Boot 静态资源映射服务）
 -- position_x / position_y 与 floorplans.js 的 SVG viewBox(0-400, 0-300) 对齐，确保 markers 落在各区域内
-INSERT INTO `exhibit` (`name`, `category`, `description`, `image_url`, `location_floor`, `location_area`, `position_x`, `position_y`, `view_count`) VALUES
+INSERT INTO `exhibit` (`name`, `category`, `description`, `image_url`, `audio_url`, `location_floor`, `location_area`, `position_x`, `position_y`, `view_count`) VALUES
   -- 1F：A/B/C/D 四角厅
-  ('清明上河图',   '书画',   '北宋张择端代表作，描绘汴京繁华市井，长卷构图细节丰富。', '/images/qingminghe.jpg',   1, 'A区',  100,  78, 120),
-  ('青铜鼎',       '青铜器', '商周时期祭祀礼器，铸造工艺精湛，纹饰庄严。',             '/images/qingtongding.jpg', 1, 'B区',  300,  78,  88),
-  ('金缕玉衣',     '服饰',   '汉代王侯下葬玉殓服，金丝串缀玉片，工艺繁复。',           '/images/jinlv.jpg',        1, 'C区',  100, 222,  95),
-  ('越王勾践剑',   '青铜器', '春秋越国宝剑，历经两千年仍寒光逼人、刃锋如新。',         '/images/yuewang.webp',     1, 'D区',  300, 222, 110),
+  ('清明上河图',   '书画',   '北宋张择端代表作，描绘汴京繁华市井，长卷构图细节丰富。', '/images/qingminghe.jpg',    '/audio/qingminghe.mp3',   1, 'A区',  100,  78, 120),
+  ('青铜鼎',       '青铜器', '商周时期祭祀礼器，铸造工艺精湛，纹饰庄严。',             '/images/qingtongding.jpg',  '/audio/qingtongding.mp3', 1, 'B区',  300,  78,  88),
+  ('金缕玉衣',     '服饰',   '汉代王侯下葬玉殓服，金丝串缀玉片，工艺繁复。',           '/images/jinlv.jpg',         '/audio/jinlv.mp3',        1, 'C区',  100, 222,  95),
+  ('越王勾践剑',   '青铜器', '春秋越国宝剑，历经两千年仍寒光逼人、刃锋如新。',         '/images/yuewang.webp',      '/audio/yuewang.mp3',      1, 'D区',  300, 222, 110),
   -- 2F：中央大厅 + 东西展厅
-  ('马踏飞燕',     '雕塑',   '东汉青铜奔马，三足腾空，被誉为中国旅游标志。',           '/images/mata.jpg',         2, '中央大厅', 200,  78, 142),
-  ('汝窑天青釉碗', '陶瓷',   '北宋汝窑代表，胎质细腻，釉色温润如玉。',                 '/images/ruyao.jpg',        2, '东展厅',   150, 225,  67),
-  ('青花瓷瓶',     '陶瓷',   '元代景德镇青花瓷，纹饰精美、发色浓艳。',                 '/images/qinghua_vase.webp', 2, '西展厅',  310, 225,  53),
+  ('马踏飞燕',     '雕塑',   '东汉青铜奔马，三足腾空，被誉为中国旅游标志。',           '/images/mata.jpg',          '/audio/mata.mp3',         2, '中央大厅', 200,  78, 142),
+  ('汝窑天青釉碗', '陶瓷',   '北宋汝窑代表，胎质细腻，釉色温润如玉。',                 '/images/ruyao.jpg',         '/audio/ruyao.mp3',        2, '东展厅',   150, 225,  67),
+  ('青花瓷瓶',     '陶瓷',   '元代景德镇青花瓷，纹饰精美、发色浓艳。',                 '/images/qinghua_vase.webp', '/audio/qinghua.mp3',      2, '西展厅',  310, 225,  53),
   -- 3F：东西厢房 + 中央主厅
-  ('甲骨文残片',   '文献',   '商代甲骨文，记录占卜活动，汉字之源。',                   '/images/jiagu.jpeg',       3, '东厢房',  95,  60,  41),
-  ('马王堆帛画',   '书画',   '西汉马王堆出土 T 形帛画，描绘升天主题。',               '/images/mawang.jpg',       3, '西厢房', 305,  60,  58),
-  ('敦煌飞天壁画', '壁画',   '唐代敦煌壁画临摹，飞天衣袂飘举、姿态轻盈。',             '/images/feitian.jpg',      3, '中央主厅', 200, 190,  76)
+  ('甲骨文残片',   '文献',   '商代甲骨文，记录占卜活动，汉字之源。',                   '/images/jiagu.jpeg',        '/audio/jiagu.mp3',        3, '东厢房',  95,  60,  41),
+  ('马王堆帛画',   '书画',   '西汉马王堆出土 T 形帛画，描绘升天主题。',                '/images/mawang.jpg',        '/audio/mawang.mp3',       3, '西厢房', 305,  60,  58),
+  ('敦煌飞天壁画', '壁画',   '唐代敦煌壁画临摹，飞天衣袂飘举、姿态轻盈。',             '/images/feitian.jpg',       '/audio/feitian.mp3',      3, '中央主厅', 200, 190,  76)
 ON DUPLICATE KEY UPDATE
   name = VALUES(name),
+  audio_url = VALUES(audio_url),
   location_floor = VALUES(location_floor),
   location_area = VALUES(location_area),
   position_x = VALUES(position_x),
