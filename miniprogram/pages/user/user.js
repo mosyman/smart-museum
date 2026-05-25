@@ -172,13 +172,13 @@ Page({
     wx.navigateTo({ url: '/pages/favorite/favorite' })
   },
 
-  // 跳转足迹
+  // 跳转足迹（tabBar 页面用 switchTab）
   goToFootprint() {
     if (!this.data.isLogin) {
       wx.showToast({ title: '请先登录', icon: 'none' })
       return
     }
-    wx.navigateTo({ url: '/pages/footprint/footprint' })
+    wx.switchTab({ url: '/pages/footprint/footprint' })
   },
 
   // 显示登录弹窗

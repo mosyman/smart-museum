@@ -153,7 +153,8 @@ Page({
   },
 
   goToMap() {
-    wx.navigateTo({ url: '/pages/map/map' })
+    // /pages/map/map 是 tabBar 页面，必须用 switchTab，navigateTo 会静默失败
+    wx.switchTab({ url: '/pages/map/map' })
   },
 
   goToCollection() {
@@ -179,7 +180,8 @@ Page({
       wx.showToast({ title: '请先登录', icon: 'none' })
       return
     }
-    wx.navigateTo({ url: '/pages/footprint/footprint' })
+    // tabBar 页面用 switchTab
+    wx.switchTab({ url: '/pages/footprint/footprint' })
   },
 
   goToExhibit(e) {
