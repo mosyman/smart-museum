@@ -4,25 +4,40 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * JWT 工具。
+ *
+ * 密钥来源（按优先级）：
+ *   1. 配置 jwt.secret（application.properties / 环境变量 JWT_SECRET）
+ *   2. 默认值（仅开发环境使用，长度需 >= 32 字节满足 HS256 要求）
+ *
+ * 之前 SECRET_KEY 用 Keys.secretKeyFor() 每次启动随机生成，
+ * 导致后端重启后已发的所有 token 全部失效 —— 这是 bug，已修。
+ */
 @Component
 public class JwtUtil {
 
-    // 生成一个安全的密钥（实际使用时可以配置在配置文件中）
-    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final long EXPIRATION_TIME = 24 * 60 * 60 * 1000L; // 24h
+    private static SecretKey SECRET_KEY;
 
-    // Token 有效期：24小时
-    private static final long EXPIRATION_TIME = 24 * 60 * 60 * 1000;
+    @Value("${jwt.secret:smart-museum-default-secret-please-change-in-prod-environment}")
+    private String configuredSecret;
 
-    /**
-     * 生成 Token
-     */
+    @PostConstruct
+    public void init() {
+        SECRET_KEY = Keys.hmacShaKeyFor(configuredSecret.getBytes(StandardCharsets.UTF_8));
+    }
+
     public static String generateToken(Integer userId, String username, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
@@ -34,13 +49,10 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SECRET_KEY)
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    /**
-     * 解析 Token
-     */
     public static Claims parseToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
@@ -49,9 +61,6 @@ public class JwtUtil {
                 .getBody();
     }
 
-    /**
-     * 验证 Token 是否有效
-     */
     public static boolean validateToken(String token) {
         try {
             parseToken(token);
@@ -61,27 +70,15 @@ public class JwtUtil {
         }
     }
 
-    /**
-     * 从 Token 中获取用户ID
-     */
     public static Integer getUserIdFromToken(String token) {
-        Claims claims = parseToken(token);
-        return (Integer) claims.get("userId");
+        return (Integer) parseToken(token).get("userId");
     }
 
-    /**
-     * 从 Token 中获取用户名
-     */
     public static String getUsernameFromToken(String token) {
-        Claims claims = parseToken(token);
-        return claims.getSubject();
+        return parseToken(token).getSubject();
     }
 
-    /**
-     * 从 Token 中获取角色
-     */
     public static String getRoleFromToken(String token) {
-        Claims claims = parseToken(token);
-        return (String) claims.get("role");
+        return (String) parseToken(token).get("role");
     }
 }

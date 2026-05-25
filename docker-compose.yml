@@ -35,6 +35,7 @@ services:
       DB_NAME: ${DB_NAME:-smart_museum}
       DB_USER: root
       DB_PASSWORD: ${DB_PASSWORD:-123654}
+      JWT_SECRET: ${JWT_SECRET:-smart-museum-default-secret-please-change-in-prod-environment}
       TZ: Asia/Shanghai
     ports:
       - "8081:8081"
