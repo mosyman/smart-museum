@@ -35,7 +35,7 @@
           <block wx:for="{{floorExhibits}}" wx:key="id">
             <view
               wx:if="{{item.positionX >= colIndex*200 && item.positionX < (colIndex+1)*200 && item.positionY >= rowIndex*200 && item.positionY < (rowIndex+1)*200}}"
-              class="exhibit-marker {{routeExhibits.indexOf(item) !== -1 ? 'route-marker' : ''}}"
+              class="exhibit-marker {{routeExhibitIds.indexOf(item.id) !== -1 ? 'route-marker' : ''}}"
               bindtap="goToExhibit"
               data-id="{{item.id}}"
             >
