@@ -1,88 +1,78 @@
 <view class="container">
+
   <!-- 楼层切换 -->
   <view class="floor-tabs">
-    <view 
-      class="floor-tab {{currentFloor === item ? 'active' : ''}}" 
-      wx:for="{{floors}}" 
-      wx:key="index"
-      bindtap="switchFloor" 
-      data-floor="{{item}}"
-    >
-      {{item}}楼
-    </view>
+    <view
+      class="floor-tab {{currentFloor === item ? 'active' : ''}}"
+      wx:for="{{floors}}" wx:key="*this"
+      bindtap="switchFloor" data-floor="{{item}}"
+    >{{item}}F</view>
   </view>
 
   <!-- 路线选择 -->
-  <view class="route-selector">
-    <picker bindchange="onRouteChange" range="{{routes}}" range-key="name" value="{{selectedRoute ? selectedRoute.id : ''}}">
-      <view class="picker">
-        {{selectedRoute ? selectedRoute.name : '选择推荐路线'}}
+  <view class="route-bar">
+    <picker bindchange="onRouteChange" range="{{routes}}" range-key="name">
+      <view class="picker {{showRoute ? 'active' : ''}}">
+        <text class="icon">🧭</text>
+        <text class="picker-text">{{selectedRoute ? selectedRoute.name : '选择推荐路线'}}</text>
         <text class="arrow">▼</text>
       </view>
     </picker>
-    <view class="clear-route" wx:if="{{showRoute}}" bindtap="clearRoute">清除</view>
+    <view class="clear-btn" wx:if="{{showRoute}}" bindtap="clearRoute">清除</view>
   </view>
 
-  <!-- 地图区域 -->
-  <view class="map-area">
-    <!-- 地图网格（模拟展厅布局） -->
-    <view class="map-grid">
-      <!-- 行（用 wx:for-item / wx:for-index 给嵌套循环起别名，否则内层 colIndex/rowIndex 为 undefined） -->
-      <view class="map-row" wx:for="{{[0,1,2,3,4]}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex">
-        <!-- 列 -->
-        <view class="map-cell" wx:for="{{[0,1,2,3,4]}}" wx:for-item="col" wx:for-index="colIndex" wx:key="colIndex">
-          <!-- 展品标记 -->
-          <block wx:for="{{floorExhibits}}" wx:key="id">
-            <view
-              wx:if="{{item.positionX >= colIndex*200 && item.positionX < (colIndex+1)*200 && item.positionY >= rowIndex*200 && item.positionY < (rowIndex+1)*200}}"
-              class="exhibit-marker {{routeExhibitIds.indexOf(item.id) !== -1 ? 'route-marker' : ''}}"
-              bindtap="goToExhibit"
-              data-id="{{item.id}}"
-            >
-              <text class="marker-icon">📍</text>
-              <text class="marker-name">{{item.name}}</text>
-            </view>
-          </block>
-        </view>
+  <!-- 路线信息卡 -->
+  <view class="route-card" wx:if="{{showRoute && selectedRoute}}">
+    <view class="rc-info">
+      <view class="rc-name">{{selectedRoute.name}}</view>
+      <view class="rc-meta">⏱ {{selectedRoute.recommendTime}} 分钟 · {{waypointIds.length}} 站 · 本层 {{onFloorCount}} 站</view>
+    </view>
+    <view class="rc-btn" bindtap="startNavigation">开始导航 →</view>
+  </view>
+
+  <!-- 平面图区域 -->
+  <view class="floor-plan">
+    <image class="fp-image" src="{{floorPlanUrl}}" mode="widthFix" />
+
+    <!-- 展品标记（绝对定位，叠在平面图上） -->
+    <view
+      class="marker {{item.routeIdx > 0 ? 'marker-route' : (item.visited ? 'marker-visited' : 'marker-normal')}}"
+      wx:for="{{floorExhibits}}" wx:key="id"
+      style="left: {{item.pctX}}%; top: {{item.pctY}}%;"
+      bindtap="goToExhibit" data-id="{{item.id}}"
+    >
+      <view class="marker-dot">
+        <text wx:if="{{item.routeIdx > 0}}">{{item.routeIdx}}</text>
+        <text wx:elif="{{item.visited}}">✓</text>
+        <text wx:else>•</text>
       </view>
-    </view>
-
-    <!-- 路线连线（示意） -->
-    <view class="route-line" wx:if="{{showRoute && routeExhibits.length > 1}}">
-      <view class="line-dashed"></view>
+      <text class="marker-name">{{item.name}}</text>
     </view>
   </view>
 
-  <!-- 展品列表 -->
-  <view class="exhibit-list">
-    <view class="list-title">
-      <text>📋 {{currentFloor}}楼展品列表</text>
-    </view>
-    <scroll-view scroll-x class="list-scroll">
-      <view 
-        class="exhibit-card" 
-        wx:for="{{floorExhibits}}" 
-        wx:key="id"
-        bindtap="goToExhibit"
-        data-id="{{item.id}}"
+  <!-- 图例 -->
+  <view class="legend">
+    <view class="lg-item"><view class="lg-dot lg-normal"></view>未参观</view>
+    <view class="lg-item"><view class="lg-dot lg-route"></view>路线途经</view>
+    <view class="lg-item"><view class="lg-dot lg-visited"></view>已参观</view>
+  </view>
+
+  <!-- 底部展品列表 -->
+  <view class="bottom-list">
+    <view class="bl-title">📋 {{currentFloor}}F 展品（共 {{floorExhibits.length}} 件）</view>
+    <scroll-view scroll-x class="bl-scroll" enhanced show-scrollbar="{{false}}">
+      <view
+        class="bl-card {{item.routeIdx > 0 ? 'bl-card-route' : ''}} {{item.visited ? 'bl-card-visited' : ''}}"
+        wx:for="{{floorExhibits}}" wx:key="id"
+        bindtap="goToExhibit" data-id="{{item.id}}"
       >
-        <image class="card-image" src="{{item.imageUrl}}" mode="aspectFill" />
-        <text class="card-name">{{item.name}}</text>
-        <text class="card-category">{{item.category}}</text>
+        <image class="bl-img" src="{{item.imageUrl}}" mode="aspectFill" />
+        <view class="bl-badge" wx:if="{{item.routeIdx > 0}}">{{item.routeIdx}}</view>
+        <view class="bl-badge bl-badge-v" wx:elif="{{item.visited}}">✓</view>
+        <text class="bl-name">{{item.name}}</text>
+        <text class="bl-sub">{{item.locationArea}} · {{item.category}}</text>
       </view>
     </scroll-view>
-  </view>
-
-  <!-- 导航按钮 -->
-  <view class="nav-btn" wx:if="{{showRoute}}" bindtap="startNavigation">
-    <text>开始导航 🚶</text>
-  </view>
-
-  <!-- 路线信息 -->
-  <view class="route-info" wx:if="{{showRoute && selectedRoute}}">
-    <view class="info-title">{{selectedRoute.name}}</view>
-    <view class="info-desc">{{selectedRoute.description}}</view>
-    <view class="info-time">⏱️ 预计 {{selectedRoute.recommendTime}} 分钟</view>
   </view>
 </view>
 

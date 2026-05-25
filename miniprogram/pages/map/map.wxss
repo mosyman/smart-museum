@@ -2,7 +2,7 @@
   min-height: 100vh;
   background-color: #f5f5f5;
   padding: 20rpx;
-  padding-bottom: 40rpx;
+  padding-bottom: 140rpx;
 }
 
 /* 楼层切换 */
@@ -10,204 +10,227 @@
   display: flex;
   background-color: #fff;
   border-radius: 44rpx;
-  margin-bottom: 20rpx;
-  padding: 8rpx;
+  padding: 6rpx;
+  margin-bottom: 16rpx;
 }
-
 .floor-tab {
   flex: 1;
   text-align: center;
-  padding: 20rpx 0;
+  padding: 18rpx 0;
   font-size: 28rpx;
   color: #666;
   border-radius: 40rpx;
-  transition: all 0.3s;
+  transition: all 0.25s;
 }
-
 .floor-tab.active {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
+  font-weight: bold;
 }
 
 /* 路线选择 */
-.route-selector {
+.route-bar {
   display: flex;
   align-items: center;
-  gap: 20rpx;
-  margin-bottom: 20rpx;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
 }
-
 .picker {
   flex: 1;
   background-color: #fff;
-  padding: 24rpx 30rpx;
+  padding: 22rpx 28rpx;
   border-radius: 44rpx;
   font-size: 28rpx;
   color: #333;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 12rpx;
 }
-
-.arrow {
-  font-size: 24rpx;
-  color: #999;
+.picker.active {
+  background-color: #fff7eb;
+  color: #c97a3b;
 }
-
-.clear-route {
+.icon { font-size: 28rpx; }
+.picker-text { flex: 1; }
+.arrow { font-size: 22rpx; color: #999; }
+.clear-btn {
   background-color: #fef0f0;
-  padding: 20rpx 30rpx;
+  padding: 18rpx 28rpx;
   border-radius: 44rpx;
-  font-size: 26rpx;
+  font-size: 24rpx;
   color: #f56c6c;
 }
 
-/* 地图区域 */
-.map-area {
+/* 路线卡 */
+.route-card {
+  background: linear-gradient(135deg, #fff8e1 0%, #fff3d0 100%);
+  border: 1rpx solid #f5c97a;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.rc-info { flex: 1; }
+.rc-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #c97a3b;
+  margin-bottom: 6rpx;
+}
+.rc-meta {
+  font-size: 22rpx;
+  color: #8a6c3f;
+}
+.rc-btn {
+  background: linear-gradient(135deg, #f5a623 0%, #e6a23c 100%);
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: bold;
+  padding: 18rpx 28rpx;
+  border-radius: 40rpx;
+  white-space: nowrap;
+}
+
+/* 平面图 */
+.floor-plan {
+  position: relative;
   background-color: #fff;
   border-radius: 16rpx;
-  padding: 20rpx;
-  margin-bottom: 20rpx;
-  position: relative;
-  overflow-x: auto;
+  overflow: hidden;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
 }
-
-.map-grid {
-  min-width: 1000rpx;
-}
-
-.map-row {
-  display: flex;
-}
-
-.map-cell {
-  width: 200rpx;
-  height: 200rpx;
-  border: 1rpx solid #eee;
-  position: relative;
-  background-color: #fafafa;
+.fp-image {
+  width: 100%;
+  display: block;
+  /* viewBox 400×300 → aspect-ratio 4:3，widthFix 自动算高 */
 }
 
 /* 展品标记 */
-.exhibit-marker {
+.marker {
   position: absolute;
-  top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(59, 89, 152, 0.9);
-  border-radius: 60rpx;
-  padding: 10rpx 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+.marker-dot {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 8rpx;
-  white-space: nowrap;
-  z-index: 10;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.15);
-}
-
-.exhibit-marker.route-marker {
-  background-color: #e6a23c;
-}
-
-.marker-icon {
-  font-size: 28rpx;
-}
-
-.marker-name {
-  font-size: 22rpx;
+  justify-content: center;
+  font-size: 20rpx;
+  font-weight: bold;
   color: #fff;
-  max-width: 120rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.25);
+  border: 2rpx solid #fff;
+}
+.marker-name {
+  margin-top: 4rpx;
+  font-size: 18rpx;
+  color: #333;
+  background-color: rgba(255,255,255,0.85);
+  padding: 2rpx 8rpx;
+  border-radius: 8rpx;
+  max-width: 140rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 展品列表 */
-.exhibit-list {
+.marker-normal .marker-dot { background-color: #3b5998; }
+.marker-route  .marker-dot { background-color: #e6a23c; width: 40rpx; height: 40rpx; font-size: 22rpx; }
+.marker-route  .marker-name { color: #c97a3b; font-weight: bold; }
+.marker-visited .marker-dot { background-color: #888; }
+.marker-visited .marker-name { color: #888; text-decoration: line-through; }
+
+/* 图例 */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 28rpx;
+  margin-bottom: 20rpx;
+  font-size: 22rpx;
+  color: #666;
+}
+.lg-item { display: flex; align-items: center; gap: 8rpx; }
+.lg-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  border: 1.5rpx solid #fff;
+  box-shadow: 0 1rpx 3rpx rgba(0,0,0,0.2);
+}
+.lg-normal { background-color: #3b5998; }
+.lg-route  { background-color: #e6a23c; }
+.lg-visited { background-color: #888; }
+
+/* 底部展品列表 */
+.bottom-list {
   background-color: #fff;
   border-radius: 16rpx;
   padding: 20rpx;
-  margin-bottom: 20rpx;
 }
-
-.list-title {
-  font-size: 30rpx;
+.bl-title {
+  font-size: 28rpx;
   font-weight: bold;
   color: #333;
-  margin-bottom: 20rpx;
+  margin-bottom: 16rpx;
 }
-
-.list-scroll {
+.bl-scroll {
   white-space: nowrap;
 }
-
-.exhibit-card {
+.bl-card {
   display: inline-block;
   width: 200rpx;
-  margin-right: 20rpx;
-  text-align: center;
+  margin-right: 16rpx;
+  position: relative;
+  vertical-align: top;
 }
-
-.card-image {
-  width: 180rpx;
-  height: 180rpx;
-  border-radius: 16rpx;
+.bl-card:active { opacity: 0.7; }
+.bl-img {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 12rpx;
   background-color: #f0f0f0;
 }
-
-.card-name {
+.bl-name {
   display: block;
   font-size: 24rpx;
   color: #333;
-  margin-top: 12rpx;
+  margin-top: 10rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.card-category {
+.bl-sub {
   display: block;
   font-size: 20rpx;
   color: #999;
   margin-top: 4rpx;
 }
-
-/* 导航按钮 */
-.nav-btn {
-  background: linear-gradient(135deg, #67c23a 0%, #5caf32 100%);
-  border-radius: 44rpx;
-  padding: 28rpx;
-  text-align: center;
-  margin-bottom: 20rpx;
-}
-
-.nav-btn text {
-  font-size: 32rpx;
+.bl-card-route .bl-name { color: #c97a3b; font-weight: bold; }
+.bl-card-visited .bl-img { opacity: 0.55; }
+.bl-card-visited .bl-name { text-decoration: line-through; color: #999; }
+.bl-badge {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  background-color: #e6a23c;
   color: #fff;
+  font-size: 20rpx;
   font-weight: bold;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 4rpx rgba(0,0,0,0.2);
 }
-
-/* 路线信息 */
-.route-info {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16rpx;
-  padding: 30rpx;
-  color: #fff;
-}
-
-.info-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 12rpx;
-}
-
-.info-desc {
-  font-size: 24rpx;
-  opacity: 0.9;
-  margin-bottom: 12rpx;
-}
-
-.info-time {
-  font-size: 24rpx;
-  opacity: 0.8;
-}
+.bl-badge-v { background-color: #888; }
