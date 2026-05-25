@@ -1,6 +1,8 @@
 -- 智慧博物馆导览系统 - 数据库初始化脚本
 -- 由 entity 类反推得到，字段名遵循 MyBatis-Plus 的 @TableField 映射
 
+SET NAMES utf8mb4;
+
 CREATE DATABASE IF NOT EXISTS smart_museum DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE smart_museum;
 
