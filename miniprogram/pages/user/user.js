@@ -79,7 +79,8 @@ Page({
 
   // 登录
   handleLogin() {
-    const { loginUsername, loginPassword } = this.data
+    const loginUsername = (this.data.loginUsername || '').trim()
+    const loginPassword = this.data.loginPassword || ''
     if (!loginUsername || !loginPassword) {
       wx.showToast({ title: '请填写用户名和密码', icon: 'none' })
       return
@@ -107,7 +108,9 @@ Page({
 
   // 注册
   handleRegister() {
-    const { regUsername, regPassword, regNickname } = this.data
+    const regUsername = (this.data.regUsername || '').trim()
+    const regPassword = this.data.regPassword || ''
+    const regNickname = (this.data.regNickname || '').trim()
     if (!regUsername || !regPassword) {
       wx.showToast({ title: '请填写用户名和密码', icon: 'none' })
       return

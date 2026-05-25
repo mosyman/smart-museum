@@ -63,7 +63,8 @@ const handleLogin = async () => {
     if (valid) {
       loading.value = true
       try {
-        const res = await login(form)
+        const payload = { username: form.username.trim(), password: form.password }
+        const res = await login(payload)
         if (res.code === 200) {
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('user', JSON.stringify(res.data))
