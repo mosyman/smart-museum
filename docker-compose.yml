@@ -39,5 +39,14 @@ services:
     ports:
       - "8081:8081"
 
+  admin-web:
+    build: ./admin-web
+    container_name: smart-museum-admin-web
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+
 volumes:
   mysql_data:

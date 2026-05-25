@@ -2,7 +2,7 @@ import axios from 'axios'
 import ElementPlus from 'element-plus'
 
 const request = axios.create({
-    baseURL: 'http://localhost:8081/api',
+    baseURL: '/api',
     timeout: 10000
 })
 
