@@ -90,7 +90,8 @@ CREATE TABLE IF NOT EXISTS `statistics` (
 -- BCrypt hash 由 htpasswd 生成（$2y$ 与 Spring 的 $2a$ 兼容）
 INSERT INTO `user` (`username`, `password`, `role`, `nickname`) VALUES
   ('admin',   '$2y$10$k91D.GYV10EQrO6gsrFQFuTkrSdhCcZazXq9wu6izKL0a0sXG5tPW', 'admin',   '管理员'),
-  ('tourist', '$2y$10$jYI52L3zEkCAu04v06IcbuhSl7Z4cG/pAaYmandplvOCpjG1J8/H2', 'tourist', '游客测试账号')
+  ('tourist', '$2y$10$jYI52L3zEkCAu04v06IcbuhSl7Z4cG/pAaYmandplvOCpjG1J8/H2', 'tourist', '游客测试账号'),
+  ('chl',     '$2y$10$jYI52L3zEkCAu04v06IcbuhSl7Z4cG/pAaYmandplvOCpjG1J8/H2', 'tourist', 'chl')
 ON DUPLICATE KEY UPDATE username = VALUES(username);
 
 -- 种子展品（图片来自 static/images/，audio 来自 static/audio/，由 Spring Boot 静态资源映射服务）
