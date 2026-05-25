@@ -31,6 +31,10 @@
           <el-icon><DataAnalysis /></el-icon>
           <span>数据统计</span>
         </el-menu-item>
+        <el-menu-item index="/behavior">
+          <el-icon><View /></el-icon>
+          <span>用户行为</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
 
@@ -52,7 +56,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { DataBoard, Collection, User, MapLocation, DataAnalysis } from '@element-plus/icons-vue'
+import { DataBoard, Collection, User, MapLocation, DataAnalysis, View } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const route = useRoute()

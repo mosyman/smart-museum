@@ -116,7 +116,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getUserList, deleteUser, register, updateUser } from '@/api/user'
+import { getUserList, deleteUser, adminCreateUser, updateUser } from '@/api/user'
 
 // 数据
 const tableData = ref([])
@@ -291,8 +291,8 @@ const submitForm = async () => {
         }
         res = await updateUser(updateData)
       } else {
-        // 新增
-        res = await register({
+        // 新增（走 admin 接口，可创建任意角色）
+        res = await adminCreateUser({
           username: form.username,
           password: form.password,
           nickname: form.nickname,

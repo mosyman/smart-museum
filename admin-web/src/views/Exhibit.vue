@@ -49,9 +49,10 @@
         <el-table-column prop="description" label="描述" min-width="250" show-overflow-tooltip />
         <el-table-column prop="viewCount" label="浏览次数" width="100" sortable />
         <el-table-column prop="locationArea" label="位置" width="100" />
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="240" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
+            <el-button type="success" link @click="handleShowQr(row)">二维码</el-button>
             <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
@@ -121,6 +122,14 @@
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="submitForm" :loading="submitLoading">确定</el-button>
       </template>
+    </el-dialog>
+
+    <!-- 二维码弹窗 -->
+    <el-dialog v-model="qrVisible" :title="`展品二维码 - ${qrName}`" width="360px" align-center>
+      <div style="text-align:center;">
+        <img v-if="qrUrl" :src="qrUrl" :alt="qrName" style="width:300px;height:300px;" />
+        <p style="margin-top:12px;color:#666;font-size:13px;">小程序扫码即可跳转到该展品详情</p>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -277,6 +286,17 @@ const handleEdit = (row) => {
   dialogTitle.value = '编辑展品'
   Object.assign(form, row)
   dialogVisible.value = true
+}
+
+// 二维码弹窗
+const qrVisible = ref(false)
+const qrUrl = ref('')
+const qrName = ref('')
+const handleShowQr = (row) => {
+  qrName.value = row.name
+  // 加时间戳避免缓存
+  qrUrl.value = `/api/exhibit/${row.id}/qr-code?t=${Date.now()}`
+  qrVisible.value = true
 }
 
 // 删除

@@ -1,7 +1,11 @@
+const { baseUrl } = require('../../utils/config.js')
+
 Page({
   data: {
     visitRecords: [],
+    recommends: [],
     loading: false,
+    defaultImg: `${baseUrl}/images/default.jpg`,
     report: {
       totalCount: 0,
       totalDuration: 0,
@@ -13,11 +17,10 @@ Page({
     this.loadFootprint()
   },
 
-  // 加载我的足迹
   loadFootprint() {
     const userId = wx.getStorageSync('userId')
     const token = wx.getStorageSync('token')
-    
+
     if (!userId || !token) {
       wx.showToast({ title: '请先登录', icon: 'none' })
       return
@@ -25,43 +28,55 @@ Page({
 
     this.setData({ loading: true })
     wx.request({
-      url: `http://localhost:8081/api/visit/footprint/${userId}`,
+      url: `${baseUrl}/api/visit/footprint/${userId}`,
       method: 'GET',
-      header: { 
+      header: {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json'
       },
       success: (res) => {
-        console.log('足迹返回数据:', res.data)  // 调试日志
         if (res.data.code === 200) {
           let records = res.data.data || []
-          // 补全图片URL和格式化时间
           records.forEach(item => {
             if (item.imageUrl && item.imageUrl.startsWith('/')) {
-              item.imageUrl = 'http://localhost:8081' + item.imageUrl
+              item.imageUrl = baseUrl + item.imageUrl
             }
-            // 格式化时间
             if (item.visitTime) {
               item.visitTime = this.formatTime(item.visitTime)
             }
           })
           this.setData({ visitRecords: records })
           this.generateReport(records)
+          this.loadRecommends(userId, token)
         } else if (res.data.code === 401) {
           wx.showToast({ title: '请重新登录', icon: 'none' })
         }
       },
-      fail: (err) => {
-        console.error('加载足迹失败:', err)
-        wx.showToast({ title: '加载失败', icon: 'none' })
-      },
-      complete: () => {
-        this.setData({ loading: false })
+      fail: () => wx.showToast({ title: '加载失败', icon: 'none' }),
+      complete: () => this.setData({ loading: false })
+    })
+  },
+
+  // 加载基于参观历史的推荐
+  loadRecommends(userId, token) {
+    wx.request({
+      url: `${baseUrl}/api/recommend/${userId}`,
+      method: 'GET',
+      header: { 'Authorization': 'Bearer ' + token },
+      success: (res) => {
+        if (res.data.code === 200) {
+          let items = (res.data.data || []).slice(0, 6)
+          items.forEach(item => {
+            if (item.imageUrl && item.imageUrl.startsWith('/')) {
+              item.imageUrl = baseUrl + item.imageUrl
+            }
+          })
+          this.setData({ recommends: items })
+        }
       }
     })
   },
 
-  // 生成参观报告
   generateReport(records) {
     let totalCount = records.length
     let totalDuration = 0
@@ -73,7 +88,6 @@ Page({
       categoryCount[category] = (categoryCount[category] || 0) + 1
     })
 
-    // 找出最喜欢的分类
     let favoriteCategory = ''
     let maxCount = 0
     for (let category in categoryCount) {
@@ -85,30 +99,22 @@ Page({
 
     this.setData({
       report: {
-        totalCount: totalCount,
-        totalDuration: totalDuration,
+        totalCount,
+        totalDuration,
         favoriteCategory: favoriteCategory || '暂无'
       }
     })
   },
 
-  // 格式化时间
   formatTime(timeStr) {
     if (!timeStr) return ''
-    let date = new Date(timeStr)
-    let year = date.getFullYear()
-    let month = String(date.getMonth() + 1).padStart(2, '0')
-    let day = String(date.getDate()).padStart(2, '0')
-    let hour = String(date.getHours()).padStart(2, '0')
-    let minute = String(date.getMinutes()).padStart(2, '0')
-    return `${year}-${month}-${day} ${hour}:${minute}`
+    const date = new Date(timeStr)
+    const pad = (n) => String(n).padStart(2, '0')
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`
   },
 
-  // 跳转展品详情
   goToExhibit(e) {
-    console.log('点击事件:', e)  // 调试日志
     const id = e.currentTarget.dataset.id
-    console.log('展品ID:', id)  // 调试日志
     if (id) {
       wx.navigateTo({ url: `/pages/exhibit/exhibit?id=${id}` })
     } else {
@@ -116,7 +122,6 @@ Page({
     }
   },
 
-  // 清空足迹
   clearFootprint() {
     wx.showModal({
       title: '提示',
@@ -129,7 +134,6 @@ Page({
     })
   },
 
-  // 下拉刷新
   onPullDownRefresh() {
     this.loadFootprint()
     wx.stopPullDownRefresh()

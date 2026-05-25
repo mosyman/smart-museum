@@ -1,17 +1,18 @@
+const { baseUrl } = require('./utils/config.js')
+
 App({
   globalData: {
     userInfo: null,
     userId: null,
     token: null,
-    baseUrl: 'http://localhost:8081/api'
+    baseUrl: `${baseUrl}/api`
   },
 
   onLaunch() {
-    // 检查是否有已登录信息
     const token = wx.getStorageSync('token')
     const userId = wx.getStorageSync('userId')
     const userInfo = wx.getStorageSync('userInfo')
-    
+
     if (token && userId && userInfo) {
       this.globalData.token = token
       this.globalData.userId = userId
@@ -19,7 +20,6 @@ App({
     }
   },
 
-  // 用户登录
   userLogin(userData) {
     this.globalData.token = userData.token
     this.globalData.userId = userData.id
@@ -29,7 +29,6 @@ App({
     wx.setStorageSync('userInfo', userData)
   },
 
-  // 退出登录
   logout() {
     this.globalData.token = null
     this.globalData.userId = null

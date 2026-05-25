@@ -22,7 +22,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = baseMapper.selectOne(wrapper);
 
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            // 返回用户信息，但清除密码
             user.setPassword(null);
             return user;
         }
@@ -31,15 +30,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean register(User user) {
-        // 检查用户名是否已存在
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("username", user.getUsername());
-        if (baseMapper.selectCount(wrapper) > 0) {
-            return false;  // 用户名已存在
-        }
-        // 加密密码
+        if (existsByUsername(user.getUsername())) return false;
+        user.setRole("tourist");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return save(user);
+    }
+
+    @Override
+    public boolean adminCreate(User user) {
+        if (existsByUsername(user.getUsername())) return false;
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("tourist");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return save(user);
+    }
+
+    private boolean existsByUsername(String username) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", username);
+        return baseMapper.selectCount(wrapper) > 0;
     }
 
     @Override

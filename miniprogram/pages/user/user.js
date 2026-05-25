@@ -1,4 +1,5 @@
 const app = getApp()
+const { baseUrl } = require('../../utils/config.js')
 
 Page({
   data: {
@@ -41,7 +42,7 @@ Page({
     const token = wx.getStorageSync('token')
     
     wx.request({
-      url: `http://localhost:8081/api/favorite/list/${userId}`,
+      url: `${baseUrl}/api/favorite/list/${userId}`,
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + token },
       success: (res) => {
@@ -53,7 +54,7 @@ Page({
     })
 
     wx.request({
-      url: `http://localhost:8081/api/visit/footprint/${userId}`,
+      url: `${baseUrl}/api/visit/footprint/${userId}`,
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + token },
       success: (res) => {
@@ -88,7 +89,7 @@ Page({
 
     wx.showLoading({ title: '登录中...' })
     wx.request({
-      url: 'http://localhost:8081/api/user/login',
+      url: `${baseUrl}/api/user/login`,
       method: 'POST',
       data: { username: loginUsername, password: loginPassword },
       success: (res) => {
@@ -118,7 +119,7 @@ Page({
 
     wx.showLoading({ title: '注册中...' })
     wx.request({
-      url: 'http://localhost:8081/api/user/register',
+      url: `${baseUrl}/api/user/register`,
       method: 'POST',
       data: { 
         username: regUsername, 

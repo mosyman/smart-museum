@@ -4,14 +4,14 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.museum.smartmuseum.entity.User;
 
 public interface UserService extends IService<User> {
-    // 登录验证
     User login(String username, String password);
 
-    // 注册
+    /** 公开注册：强制 role = tourist */
     boolean register(User user);
 
-    // 根据用户名查询用户
+    /** 管理员创建用户：保留 role（可创建 admin / tourist） */
+    boolean adminCreate(User user);
+
     User getUserByUsername(String username);
-    // 新增：根据用户ID获取用户
     User getUserById(Integer id);
 }

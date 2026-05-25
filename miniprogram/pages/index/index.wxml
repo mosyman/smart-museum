@@ -24,6 +24,10 @@
     <text class="menu-emoji">🏛️</text>
     <text class="menu-text">馆藏集珍</text>
   </view>
+  <view class="menu-item" bindtap="recommendRouteByTime">
+    <text class="menu-emoji">🧭</text>
+    <text class="menu-text">智能推荐</text>
+  </view>
 </view>
 
   <!-- 热门展品 -->
@@ -76,7 +80,7 @@
         <text class="label">途经展品：</text>
         <view class="waypoint-list">
           <view class="waypoint-item" wx:for="{{routeExhibits}}" wx:key="id" bindtap="goToExhibit" data-id="{{item.id}}">
-            <image class="waypoint-img" src="{{item.imageUrl || 'http://localhost:8081/images/default.jpg'}}" mode="aspectFill" />
+            <image class="waypoint-img" src="{{item.imageUrl || defaultImg}}" mode="aspectFill" />
             <text class="waypoint-name">{{item.name}}</text>
           </view>
         </view>

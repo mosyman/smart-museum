@@ -5,9 +5,14 @@ export const login = (data) => {
     return request.post('/user/login', data)
 }
 
-// 注册
+// 注册（公开，只能创建 tourist）
 export const register = (data) => {
     return request.post('/user/register', data)
+}
+
+// 管理员创建用户（可指定 role）
+export const adminCreateUser = (data) => {
+    return request.post('/user/admin/create', data)
 }
 
 // 获取用户列表

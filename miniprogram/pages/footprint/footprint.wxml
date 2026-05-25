@@ -33,7 +33,7 @@
       
       <!-- 关键：data-id="{{item.exhibitId}}" -->
       <view class="footprint-item" wx:for="{{visitRecords}}" wx:key="recordId" bindtap="goToExhibit" data-id="{{item.exhibitId}}">
-        <image class="footprint-image" src="{{item.imageUrl || 'http://localhost:8081/images/default.jpg'}}" mode="aspectFill" />
+        <image class="footprint-image" src="{{item.imageUrl || defaultImg}}" mode="aspectFill" />
         <view class="footprint-info">
           <text class="footprint-name">{{item.exhibitName}}</text>
           <text class="footprint-time">📅 {{item.visitTime}}</text>
@@ -50,6 +50,17 @@
       <text class="empty-emoji">👣</text>
       <text class="empty-text">暂无参观记录</text>
       <text class="empty-tip">去首页逛逛展品，留下你的足迹吧～</text>
+    </view>
+
+    <!-- 为你推荐 -->
+    <view class="report-card" wx:if="{{recommends.length > 0}}">
+      <view class="report-title">✨ 为你推荐</view>
+      <scroll-view scroll-x class="hot-list" style="white-space:nowrap;">
+        <view class="hot-item" wx:for="{{recommends}}" wx:key="id" bindtap="goToExhibit" data-id="{{item.id}}" style="display:inline-block;margin-right:20rpx;width:200rpx;">
+          <image src="{{item.imageUrl || defaultImg}}" mode="aspectFill" style="width:200rpx;height:200rpx;border-radius:12rpx;" />
+          <text style="display:block;font-size:24rpx;margin-top:8rpx;">{{item.name}}</text>
+        </view>
+      </scroll-view>
     </view>
   </block>
 </view>
