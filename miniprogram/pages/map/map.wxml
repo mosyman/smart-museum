@@ -27,13 +27,13 @@
   <view class="map-area">
     <!-- 地图网格（模拟展厅布局） -->
     <view class="map-grid">
-      <!-- 行 -->
-      <view class="map-row" wx:for="{{[0,1,2,3,4]}}" wx:key="rowIndex">
+      <!-- 行（用 wx:for-item / wx:for-index 给嵌套循环起别名，否则内层 colIndex/rowIndex 为 undefined） -->
+      <view class="map-row" wx:for="{{[0,1,2,3,4]}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex">
         <!-- 列 -->
-        <view class="map-cell" wx:for="{{[0,1,2,3,4]}}" wx:key="colIndex">
+        <view class="map-cell" wx:for="{{[0,1,2,3,4]}}" wx:for-item="col" wx:for-index="colIndex" wx:key="colIndex">
           <!-- 展品标记 -->
           <block wx:for="{{floorExhibits}}" wx:key="id">
-            <view 
+            <view
               wx:if="{{item.positionX >= colIndex*200 && item.positionX < (colIndex+1)*200 && item.positionY >= rowIndex*200 && item.positionY < (rowIndex+1)*200}}"
               class="exhibit-marker {{routeExhibits.indexOf(item) !== -1 ? 'route-marker' : ''}}"
               bindtap="goToExhibit"

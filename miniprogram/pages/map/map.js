@@ -131,14 +131,8 @@ Page({
       wx.showToast({ title: '请先选择路线', icon: 'none' })
       return
     }
-    wx.showModal({
-      title: '开始导航',
-      content: `即将开始"${this.data.selectedRoute.name}"，预计${this.data.selectedRoute.recommendTime}分钟`,
-      success: (res) => {
-        if (res.confirm) {
-          wx.showToast({ title: '导航功能开发中', icon: 'none' })
-        }
-      }
+    wx.navigateTo({
+      url: `/pages/navigation/navigation?routeId=${this.data.selectedRoute.id}`
     })
   }
 })

@@ -1,0 +1,220 @@
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 24rpx;
+  padding-bottom: 60rpx;
+}
+
+/* 进度条卡片 */
+.progress-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20rpx;
+  padding: 32rpx;
+  color: #fff;
+  margin-bottom: 24rpx;
+}
+.route-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+.progress-bar {
+  flex: 1;
+  height: 12rpx;
+  background-color: rgba(255,255,255,0.3);
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background-color: #fff;
+  transition: width 0.3s;
+}
+.progress-text {
+  font-size: 26rpx;
+  white-space: nowrap;
+}
+.route-time {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+/* 当前展品卡片 */
+.current-card {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+.step-label {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+.current-img {
+  width: 100%;
+  height: 400rpx;
+  border-radius: 16rpx;
+  background-color: #f0f0f0;
+  margin-bottom: 20rpx;
+}
+.current-name {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+.current-meta {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 16rpx;
+}
+.meta-item {
+  font-size: 24rpx;
+  color: #666;
+  background-color: #f5f5f5;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+}
+.current-desc {
+  font-size: 28rpx;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 24rpx;
+}
+
+.action-row {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+.primary-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #67c23a 0%, #5caf32 100%);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: bold;
+  border-radius: 44rpx;
+}
+.ghost-btn {
+  flex: 1;
+  background-color: #f5f5f5;
+  color: #666;
+  font-size: 30rpx;
+  border-radius: 44rpx;
+}
+.ghost-btn[disabled] {
+  opacity: 0.4;
+}
+
+.detail-link {
+  text-align: center;
+  font-size: 26rpx;
+  color: #667eea;
+  margin-top: 12rpx;
+}
+
+/* 完成卡片 */
+.finish-card {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 60rpx 32rpx;
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+.finish-emoji {
+  display: block;
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+.finish-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+.finish-desc {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 32rpx;
+}
+
+/* 整条路线一览 */
+.overview-card {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+}
+.overview-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+.overview-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.overview-item:last-child { border-bottom: 0; }
+
+.overview-num {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #999;
+  text-align: center;
+  line-height: 48rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+.overview-current .overview-num {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+.overview-done .overview-num {
+  background-color: #67c23a;
+  color: #fff;
+}
+
+.overview-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.overview-name {
+  font-size: 28rpx;
+  color: #333;
+}
+.overview-current .overview-name {
+  color: #667eea;
+  font-weight: bold;
+}
+.overview-loc {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+.overview-check {
+  font-size: 32rpx;
+  color: #67c23a;
+}
+
+.empty {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+}

@@ -148,7 +148,7 @@ Page({
     const route = this.data.currentRoute
     if (route) {
       this.closeRouteModal()
-      wx.navigateTo({ url: `/pages/map/map?routeId=${route.id}` })
+      wx.navigateTo({ url: `/pages/navigation/navigation?routeId=${route.id}` })
     }
   },
 

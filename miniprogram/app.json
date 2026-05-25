@@ -6,7 +6,8 @@
     "pages/user/user",
     "pages/favorite/favorite",
     "pages/collection/collection",
-    "pages/exhibit/exhibit"
+    "pages/exhibit/exhibit",
+    "pages/navigation/navigation"
   ],
   "tabBar": {
     "custom": true,

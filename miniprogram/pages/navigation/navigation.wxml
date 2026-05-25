@@ -1,0 +1,67 @@
+<view class="container" wx:if="{{route && waypoints.length > 0}}">
+
+  <!-- 顶部：进度条 -->
+  <view class="progress-card">
+    <view class="route-name">🧭 {{route.name}}</view>
+    <view class="progress-row">
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{ finished ? 100 : ((currentIdx + 1) * 100 / waypoints.length) }}%;"></view>
+      </view>
+      <text class="progress-text">{{finished ? waypoints.length : currentIdx + 1}}/{{waypoints.length}}</text>
+    </view>
+    <text class="route-time">⏱️ 预计 {{route.recommendTime}} 分钟</text>
+  </view>
+
+  <!-- 完成态 -->
+  <view class="finish-card" wx:if="{{finished}}">
+    <text class="finish-emoji">🎉</text>
+    <text class="finish-title">导航完成！</text>
+    <text class="finish-desc">你已经走完整条「{{route.name}}」路线，参观记录已自动保存到「我的足迹」。</text>
+    <button class="primary-btn" bindtap="finish">回到首页</button>
+  </view>
+
+  <!-- 当前展品（导航中） -->
+  <view class="current-card" wx:else>
+    <view class="step-label">当前展品</view>
+    <image class="current-img" src="{{waypoints[currentIdx].imageUrl || defaultImg}}" mode="aspectFill" bindtap="viewDetail" />
+    <view class="current-name">{{waypoints[currentIdx].name}}</view>
+    <view class="current-meta">
+      <text class="meta-item">📍 {{waypoints[currentIdx].locationArea}} {{waypoints[currentIdx].locationFloor}}楼</text>
+      <text class="meta-item">🏷️ {{waypoints[currentIdx].category}}</text>
+    </view>
+    <view class="current-desc">{{waypoints[currentIdx].description}}</view>
+
+    <view class="action-row">
+      <button class="ghost-btn" bindtap="prevStep" disabled="{{currentIdx === 0}}">上一站</button>
+      <button class="primary-btn" bindtap="nextStep">
+        {{currentIdx + 1 === waypoints.length ? '完成参观' : '下一站 ›'}}
+      </button>
+    </view>
+
+    <view class="detail-link" bindtap="viewDetail">查看完整介绍 →</view>
+  </view>
+
+  <!-- 整条路线一览 -->
+  <view class="overview-card">
+    <view class="overview-title">📋 完整路线</view>
+    <view
+      class="overview-item {{idx === currentIdx ? 'overview-current' : ''}} {{idx < currentIdx || finished ? 'overview-done' : ''}}"
+      wx:for="{{waypoints}}"
+      wx:for-index="idx"
+      wx:key="id"
+      bindtap="jumpTo"
+      data-idx="{{idx}}"
+    >
+      <view class="overview-num">{{idx + 1}}</view>
+      <view class="overview-info">
+        <text class="overview-name">{{item.name}}</text>
+        <text class="overview-loc">{{item.locationArea}} · {{item.locationFloor}}楼</text>
+      </view>
+      <text class="overview-check" wx:if="{{idx < currentIdx || finished}}">✓</text>
+    </view>
+  </view>
+</view>
+
+<view class="empty" wx:elif="{{!route}}">
+  <text>加载中...</text>
+</view>
