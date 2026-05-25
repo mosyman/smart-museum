@@ -1,0 +1,22 @@
+<view class="container">
+  <!-- 收藏列表 -->
+  <view class="favorite-list" wx:if="{{favorites.length > 0}}">
+    <view class="favorite-item" wx:for="{{favorites}}" wx:key="exhibitId" bindtap="goToExhibit" data-id="{{item.exhibitId}}">
+      <image class="favorite-image" src="{{item.imageUrl}}" mode="aspectFill" />
+      <view class="favorite-info">
+        <text class="favorite-name">{{item.exhibitName}}</text>
+        <text class="favorite-category">{{item.category}}</text>
+      </view>
+      <view class="favorite-remove" catchtap="removeFavorite" data-id="{{item.exhibitId}}">
+        <text>❤️ 取消</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:else>
+    <text class="empty-emoji">❤️</text>
+    <text class="empty-text">暂无收藏</text>
+    <text class="empty-tip">去首页逛逛，收藏喜欢的展品吧～</text>
+  </view>
+</view>

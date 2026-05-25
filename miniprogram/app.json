@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/map/map",
+    "pages/footprint/footprint",
+    "pages/user/user",
+    "pages/favorite/favorite",
+    "pages/collection/collection",
+    "pages/exhibit/exhibit"
+  ],
+  "tabBar": {
+    "custom": true,
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/map/map", "text": "导览" },
+      { "pagePath": "pages/footprint/footprint", "text": "足迹" },
+      { "pagePath": "pages/user/user", "text": "我的" }
+    ]
+  }
+}

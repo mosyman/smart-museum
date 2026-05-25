@@ -1,0 +1,91 @@
+<view class="container">
+  <!-- 已登录状态 -->
+  <block wx:if="{{isLogin && userInfo}}">
+    <!-- 用户信息卡片 -->
+    <view class="user-card">
+      <view class="user-avatar">
+        <text class="avatar-emoji">👤</text>
+      </view>
+      <view class="user-info">
+        <text class="user-name">{{userInfo.nickname || userInfo.username}}</text>
+        <text class="user-username">@{{userInfo.username}}</text>
+      </view>
+      <view class="logout-btn" bindtap="handleLogout">
+        <text>退出</text>
+      </view>
+    </view>
+
+    <!-- 统计数据 -->
+    <view class="stats-card">
+      <view class="stat-item" bindtap="goToFootprint">
+        <text class="stat-value">{{visitCount}}</text>
+        <text class="stat-label">参观足迹</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item" bindtap="goToFavorites">
+        <text class="stat-value">{{favoriteCount}}</text>
+        <text class="stat-label">我的收藏</text>
+      </view>
+    </view>
+
+    <!-- 功能菜单 -->
+    <view class="menu-card">
+      <view class="menu-item" bindtap="goToFootprint">
+        <text class="menu-emoji">👣</text>
+        <text class="menu-text">我的足迹</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goToFavorites">
+        <text class="menu-emoji">❤️</text>
+        <text class="menu-text">我的收藏</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goToRecommend">
+        <text class="menu-emoji">🌟</text>
+        <text class="menu-text">推荐路线</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 未登录状态 -->
+  <block wx:else>
+    <view class="login-prompt">
+      <text class="prompt-emoji">👤</text>
+      <text class="prompt-title">未登录</text>
+      <text class="prompt-desc">登录后查看我的足迹和收藏</text>
+      <button class="login-btn" bindtap="showLoginDialog">立即登录</button>
+      <button class="register-link" bindtap="showLoginDialog">注册账号</button>
+    </view>
+  </block>
+
+  <!-- 登录/注册弹窗 -->
+  <view class="login-mask" wx:if="{{showLogin}}" bindtap="closeLoginDialog">
+    <view class="login-modal" catchtap="stopPropagation">
+      <view class="modal-header">
+        <view class="tab-bar">
+          <view class="tab-item {{loginTab === 'login' ? 'active' : ''}}" bindtap="switchTab" data-tab="login">登录</view>
+          <view class="tab-item {{loginTab === 'register' ? 'active' : ''}}" bindtap="switchTab" data-tab="register">注册</view>
+        </view>
+        <view class="close-btn" bindtap="closeLoginDialog">✕</view>
+      </view>
+
+      <!-- 登录表单 -->
+      <view class="modal-body" wx:if="{{loginTab === 'login'}}">
+        <input class="login-input" placeholder="用户名" bindinput="onLoginUsernameInput" />
+        <input class="login-input" type="password" placeholder="密码" bindinput="onLoginPasswordInput" />
+        <button class="submit-btn" bindtap="handleLogin">登录</button>
+      </view>
+
+      <!-- 注册表单 -->
+      <view class="modal-body" wx:if="{{loginTab === 'register'}}">
+        <input class="login-input" placeholder="用户名" bindinput="onRegUsernameInput" />
+        <input class="login-input" type="password" placeholder="密码" bindinput="onRegPasswordInput" />
+        <input class="login-input" placeholder="昵称（选填）" bindinput="onRegNicknameInput" />
+        <button class="submit-btn" bindtap="handleRegister">注册</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<tab-bar current="3"></tab-bar>

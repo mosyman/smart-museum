@@ -1,0 +1,27 @@
+<view class="container" wx:if="{{exhibit}}">
+  <!-- 展品图片 -->
+  <image class="exhibit-image" src="{{exhibit.imageUrl || '/images/default.jpg'}}" mode="aspectFill" />
+
+  <!-- 展品信息 -->
+  <view class="card">
+    <view class="exhibit-header">
+      <text class="exhibit-name">{{exhibit.name}}</text>
+      <view class="exhibit-actions">
+        <image class="action-icon" src="/images/favorite{{isFavorited ? '_active' : ''}}.png" bindtap="toggleFavorite" />
+        <image class="action-icon" src="/images/audio.png" bindtap="playAudio" />
+      </view>
+    </view>
+    <text class="exhibit-category">{{exhibit.category}}</text>
+    <text class="exhibit-description">{{exhibit.description}}</text>
+
+    <!-- 位置信息 -->
+    <view class="location-info">
+      <text>📍 {{exhibit.locationArea}} {{exhibit.locationFloor}}楼</text>
+    </view>
+
+    <!-- 3D模型按钮 -->
+    <button class="btn-3d" bindtap="viewModel3D" wx:if="{{exhibit.model3dUrl}}">
+      🎨 查看3D模型
+    </button>
+  </view>
+</view>

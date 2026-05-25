@@ -1,0 +1,89 @@
+<view class="container">
+  <!-- 楼层切换 -->
+  <view class="floor-tabs">
+    <view 
+      class="floor-tab {{currentFloor === item ? 'active' : ''}}" 
+      wx:for="{{floors}}" 
+      wx:key="index"
+      bindtap="switchFloor" 
+      data-floor="{{item}}"
+    >
+      {{item}}楼
+    </view>
+  </view>
+
+  <!-- 路线选择 -->
+  <view class="route-selector">
+    <picker bindchange="onRouteChange" range="{{routes}}" range-key="name" value="{{selectedRoute ? selectedRoute.id : ''}}">
+      <view class="picker">
+        {{selectedRoute ? selectedRoute.name : '选择推荐路线'}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <view class="clear-route" wx:if="{{showRoute}}" bindtap="clearRoute">清除</view>
+  </view>
+
+  <!-- 地图区域 -->
+  <view class="map-area">
+    <!-- 地图网格（模拟展厅布局） -->
+    <view class="map-grid">
+      <!-- 行 -->
+      <view class="map-row" wx:for="{{[0,1,2,3,4]}}" wx:key="rowIndex">
+        <!-- 列 -->
+        <view class="map-cell" wx:for="{{[0,1,2,3,4]}}" wx:key="colIndex">
+          <!-- 展品标记 -->
+          <block wx:for="{{floorExhibits}}" wx:key="id">
+            <view 
+              wx:if="{{item.positionX >= colIndex*200 && item.positionX < (colIndex+1)*200 && item.positionY >= rowIndex*200 && item.positionY < (rowIndex+1)*200}}"
+              class="exhibit-marker {{routeExhibits.indexOf(item) !== -1 ? 'route-marker' : ''}}"
+              bindtap="goToExhibit"
+              data-id="{{item.id}}"
+            >
+              <text class="marker-icon">📍</text>
+              <text class="marker-name">{{item.name}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <!-- 路线连线（示意） -->
+    <view class="route-line" wx:if="{{showRoute && routeExhibits.length > 1}}">
+      <view class="line-dashed"></view>
+    </view>
+  </view>
+
+  <!-- 展品列表 -->
+  <view class="exhibit-list">
+    <view class="list-title">
+      <text>📋 {{currentFloor}}楼展品列表</text>
+    </view>
+    <scroll-view scroll-x class="list-scroll">
+      <view 
+        class="exhibit-card" 
+        wx:for="{{floorExhibits}}" 
+        wx:key="id"
+        bindtap="goToExhibit"
+        data-id="{{item.id}}"
+      >
+        <image class="card-image" src="{{item.imageUrl}}" mode="aspectFill" />
+        <text class="card-name">{{item.name}}</text>
+        <text class="card-category">{{item.category}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 导航按钮 -->
+  <view class="nav-btn" wx:if="{{showRoute}}" bindtap="startNavigation">
+    <text>开始导航 🚶</text>
+  </view>
+
+  <!-- 路线信息 -->
+  <view class="route-info" wx:if="{{showRoute && selectedRoute}}">
+    <view class="info-title">{{selectedRoute.name}}</view>
+    <view class="info-desc">{{selectedRoute.description}}</view>
+    <view class="info-time">⏱️ 预计 {{selectedRoute.recommendTime}} 分钟</view>
+  </view>
+</view>
+
+<tab-bar current="1"></tab-bar>

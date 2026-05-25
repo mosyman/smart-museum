@@ -1,0 +1,57 @@
+<view class="container">
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <block wx:else>
+    <!-- 参观报告卡片 -->
+    <view class="report-card" wx:if="{{visitRecords.length > 0}}">
+      <view class="report-title">📊 参观报告</view>
+      <view class="report-stats">
+        <view class="stat-item">
+          <text class="stat-value">{{report.totalCount}}</text>
+          <text class="stat-label">参观展品</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{report.totalDuration}}</text>
+          <text class="stat-label">总时长(秒)</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{report.favoriteCategory}}</text>
+          <text class="stat-label">偏好分类</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 足迹列表 -->
+    <view class="footprint-list" wx:if="{{visitRecords.length > 0}}">
+      <view class="list-header">
+        <text class="header-title">📝 参观记录</text>
+        <text class="header-clear" bindtap="clearFootprint">清空</text>
+      </view>
+      
+      <!-- 关键：data-id="{{item.exhibitId}}" -->
+      <view class="footprint-item" wx:for="{{visitRecords}}" wx:key="recordId" bindtap="goToExhibit" data-id="{{item.exhibitId}}">
+        <image class="footprint-image" src="{{item.imageUrl || 'http://localhost:8081/images/default.jpg'}}" mode="aspectFill" />
+        <view class="footprint-info">
+          <text class="footprint-name">{{item.exhibitName}}</text>
+          <text class="footprint-time">📅 {{item.visitTime}}</text>
+          <text class="footprint-duration">⏱️ 停留 {{item.duration}} 秒</text>
+        </view>
+        <view class="footprint-arrow">
+          <text>›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <text class="empty-emoji">👣</text>
+      <text class="empty-text">暂无参观记录</text>
+      <text class="empty-tip">去首页逛逛展品，留下你的足迹吧～</text>
+    </view>
+  </block>
+</view>
+
+<tab-bar current="2"></tab-bar>

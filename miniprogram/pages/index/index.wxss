@@ -1,0 +1,226 @@
+.banner {
+  height: 300rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-bottom: 30rpx;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+}
+
+.quick-menu {
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx 0;
+  margin-bottom: 30rpx;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 12rpx;
+}
+
+.menu-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.hot-list {
+  white-space: nowrap;
+}
+
+.hot-item {
+  display: inline-block;
+  width: 200rpx;
+  margin-right: 20rpx;
+  text-align: center;
+}
+
+.hot-image {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 16rpx;
+}
+
+.hot-name {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  margin-top: 12rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hot-count {
+  display: block;
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.route-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #eee;
+}
+
+.route-item:last-child {
+  border-bottom: none;
+}
+
+.route-info {
+  flex: 1;
+}
+
+.route-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.route-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.route-time {
+  display: block;
+  font-size: 22rpx;
+  color: #3b5998;
+}
+
+.route-arrow {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+
+/* 路线弹窗 */
+.route-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.route-modal {
+  width: 85%;
+  max-height: 80vh;
+  background-color: #fff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.modal-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 40rpx;
+  color: #999;
+  padding: 10rpx;
+}
+
+.modal-body {
+  flex: 1;
+  padding: 30rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.route-detail-item {
+  margin-bottom: 30rpx;
+}
+
+.route-detail-item .label {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.route-detail-item .value {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+.waypoint-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.waypoint-item {
+  width: 150rpx;
+  text-align: center;
+}
+
+.waypoint-img {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 16rpx;
+  background-color: #f0f0f0;
+}
+
+.waypoint-name {
+  display: block;
+  font-size: 22rpx;
+  color: #666;
+  margin-top: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modal-footer {
+  padding: 30rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.modal-footer .nav-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 44rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  width: 100%;
+}

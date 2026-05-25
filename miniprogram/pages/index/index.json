@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "智慧博物馆",
+  "usingComponents": {
+    "tab-bar": "/components/tab-bar/tab-bar"
+  }
+}
