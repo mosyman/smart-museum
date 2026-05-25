@@ -7,8 +7,12 @@
     <view class="exhibit-header">
       <text class="exhibit-name">{{exhibit.name}}</text>
       <view class="exhibit-actions">
-        <image class="action-icon" src="/images/favorite{{isFavorited ? '_active' : ''}}.png" bindtap="toggleFavorite" />
-        <image class="action-icon" src="/images/audio.png" bindtap="playAudio" />
+        <view class="action-icon {{isFavorited ? 'action-active' : ''}}" bindtap="toggleFavorite">
+          <text>{{isFavorited ? '❤️' : '🤍'}}</text>
+        </view>
+        <view class="action-icon {{isPlaying ? 'action-playing' : ''}}" bindtap="playAudio">
+          <text>{{isPlaying ? '⏸️' : '🔊'}}</text>
+        </view>
       </view>
     </view>
     <text class="exhibit-category">{{exhibit.category}}</text>
