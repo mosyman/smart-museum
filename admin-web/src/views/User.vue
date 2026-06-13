@@ -89,10 +89,13 @@
           <el-input v-model="form.nickname" placeholder="请输入昵称" />
         </el-form-item>
         <el-form-item label="角色" prop="role">
-          <el-radio-group v-model="form.role">
+          <el-radio-group v-model="form.role" :disabled="form.username === 'admin'">
             <el-radio label="tourist">普通用户</el-radio>
             <el-radio label="admin">管理员</el-radio>
           </el-radio-group>
+          <div v-if="form.username === 'admin'" style="color:#999;font-size:12px;margin-top:4px;">
+            内置管理员账号，不允许修改角色
+          </div>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入手机号" />

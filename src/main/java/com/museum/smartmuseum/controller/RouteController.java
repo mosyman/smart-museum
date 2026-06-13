@@ -56,13 +56,15 @@ public class RouteController {
         if (target == null) {
             return Result.error("请传入 availableTime 参数");
         }
-        QueryWrapper<Route> wrapper = new QueryWrapper<>();
-        wrapper.orderByAsc("ABS(recommend_time - " + target + ")").last("limit 1");
-        Route route = routeService.getOne(wrapper);
-        if (route == null) {
+        // 路线数量很少（< 100），在 Java 端按 |recommend_time - target| 排序，避免拼接 SQL 表达式
+        Route best = routeService.list().stream()
+                .filter(r -> r.getRecommendTime() != null)
+                .min(java.util.Comparator.comparingInt(r -> Math.abs(r.getRecommendTime() - target)))
+                .orElse(null);
+        if (best == null) {
             return Result.error("未找到合适的路线");
         }
-        return Result.success(route);
+        return Result.success(best);
     }
 
     @RequiresRole("admin")

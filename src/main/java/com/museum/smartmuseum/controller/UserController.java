@@ -9,6 +9,7 @@ import com.museum.smartmuseum.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,7 @@ public class UserController {
         return Result.success(users);
     }
 
+    @RequiresRole("admin")
     @GetMapping("/{id}")
     public Result<User> getById(@PathVariable Integer id) {
         User user = userService.getById(id);
@@ -76,11 +78,9 @@ public class UserController {
     }
 
     @GetMapping("/current")
-    public Result<User> getCurrentUser(@RequestHeader("Authorization") String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        Integer userId = JwtUtil.getUserIdFromToken(token);
+    public Result<User> getCurrentUser(HttpServletRequest request) {
+        Integer userId = (Integer) request.getAttribute("userId");
+        if (userId == null) return Result.error(401, "未登录");
         User user = userService.getUserById(userId);
         if (user != null) {
             user.setPassword(null);
@@ -89,6 +89,7 @@ public class UserController {
         return Result.error("用户不存在");
     }
 
+    @RequiresRole("admin")
     @PutMapping("/update")
     public Result<Boolean> update(@RequestBody User user) {
         // 不允许通过 update 接口改密码（避免明文绕过哈希）
